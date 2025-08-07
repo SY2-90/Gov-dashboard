@@ -8,11 +8,11 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^버전번호"
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "tailwindcss": "^버전번호",
-    "postcss": "^버전번호",
-    "autoprefixer": "^버전번호"
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.17"
   }
 }
