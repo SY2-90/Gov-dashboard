@@ -1,0 +1,18 @@
+{
+  "name": "gov-maintenance-dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css --watch",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^버전번호"
+  },
+  "devDependencies": {
+    "tailwindcss": "^버전번호",
+    "postcss": "^버전번호",
+    "autoprefixer": "^버전번호"
+  }
+}
