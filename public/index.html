@@ -121,10 +121,10 @@
       <section class="p-8 space-y-8 overflow-auto">
 
         <!-- 카드 영역 -->
-        <div class="grid grid-cols-2 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-2">
+        <div class="grid grid-cols-2 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-0">
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-indigo-50 hover:bg-indigo-100 max-w-full sm:max-w-[280px] min-h-[140px]">
+                    bg-indigo-50 hover:bg-indigo-100 max-w-full sm:max-w-[280px] min-h-[140px] cursor-pointer" data-status="all">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">총 사이트 수</p>
           <p id="totalSites" class="text-4xl font-extrabold text-indigo-600 text-left z-10">--</p>
 
@@ -138,7 +138,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-green-50 hover:bg-green-100 max-w-full sm:max-w-[280px] min-h-[140px]">
+                    bg-green-50 hover:bg-green-100 max-w-full sm:max-w-[280px] min-h-[140px] cursor-pointer" data-status="완료">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">점검 완료</p>
           <p id="completedChecks" class="text-4xl font-extrabold text-green-600 text-left z-10">--</p>
 
@@ -152,7 +152,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-orange-50 hover:bg-orange-100 max-w-full sm:max-w-[280px] min-h-[140px]">
+                    bg-orange-50 hover:bg-orange-100 max-w-full sm:max-w-[280px] min-h-[140px] cursor-pointer" data-status="진행 중">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">진행 중</p>
           <p id="ongoingChecks" class="text-4xl font-extrabold text-orange-500 text-left z-10">--</p>
 
@@ -166,7 +166,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-red-50 hover:bg-red-100 max-w-full sm:max-w-[280px] min-h-[140px]">
+                    bg-red-50 hover:bg-red-100 max-w-full sm:max-w-[280px] min-h-[140px] cursor-pointer" data-status="오류">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">이슈 건수</p>
           <p id="issueCount" class="text-4xl font-extrabold text-red-600 text-left z-10">--</p>
 
@@ -243,20 +243,29 @@
     sidebar.classList.toggle('-translate-x-full');
   });
 
-  // 점검 내역 API 호출 및 테이블 그리기 + 카드 숫자 업데이트
-  async function loadInspectionData() {
-    const response = await fetch('/api/inspections');
-    const data = await response.json();
+  // API 호출 및 데이터 전역 저장용
+  let inspectionData = [];
 
+  // 현재 필터 상태
+  let currentFilter = 'all';
+
+  // 테이블 렌더링 함수 (필터 상태에 따라 필터링)
+  function renderTable(filterStatus = 'all') {
     const tbody = document.querySelector('table tbody');
     tbody.innerHTML = '';
 
-    data.forEach(item => {
+    const filtered = filterStatus === 'all'
+      ? inspectionData
+      : inspectionData.filter(item => item.status === filterStatus);
+
+    filtered.forEach(item => {
       const tr = document.createElement('tr');
-      const statusClass = item.status === '완료' ? 'emerald' : 
+
+      const statusClass = item.status === '완료' ? 'emerald' :
                           item.status === '진행 중' ? 'orange' :
                           item.status === '오류' ? 'rose' : 'gray';
-      const bgHoverClass = item.status === '완료' ? 'sky' : 
+
+      const bgHoverClass = item.status === '완료' ? 'sky' :
                            item.status === '진행 중' ? 'orange' :
                            item.status === '오류' ? 'rose' : 'gray';
 
@@ -271,14 +280,15 @@
 
       tbody.appendChild(tr);
     });
+  }
 
-    // 카드 숫자 계산
-    const totalSites = new Set(data.map(item => item.site)).size;
-    const completedChecks = data.filter(item => item.status === '완료').length;
-    const ongoingChecks = data.filter(item => item.status === '진행 중').length;
-    const issueCount = data.filter(item => item.status === '오류').length;
+  // 카드 숫자 업데이트
+  function updateCardNumbers() {
+    const totalSites = new Set(inspectionData.map(item => item.site)).size;
+    const completedChecks = inspectionData.filter(item => item.status === '완료').length;
+    const ongoingChecks = inspectionData.filter(item => item.status === '진행 중').length;
+    const issueCount = inspectionData.filter(item => item.status === '오류').length;
 
-    // 카드에 숫자 넣기
     document.getElementById('totalSites').textContent = totalSites;
     document.getElementById('completedChecks').textContent = completedChecks;
     document.getElementById('ongoingChecks').textContent = ongoingChecks;
@@ -287,8 +297,47 @@
     document.getElementById('issueStatusText').textContent = `이슈 ${issueCount}건 처리 중`;
   }
 
+  // 카드 선택 강조 표시 함수
+  function highlightSelectedCard(selectedStatus) {
+    const cards = document.querySelectorAll('[data-status]');
+    cards.forEach(card => {
+      if (card.dataset.status === selectedStatus) {
+        card.classList.add('border-indigo-500');
+        card.classList.remove('border-transparent');
+      } else {
+        card.classList.remove('border-indigo-500');
+        card.classList.add('border-transparent');
+      }
+    });
+  }
 
+  // 카드 클릭 이벤트 등록
+  function setupCardClicks() {
+    const cards = document.querySelectorAll('[data-status]');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const status = card.dataset.status;
+        currentFilter = status;
+        renderTable(status);
+        highlightSelectedCard(status);
+      });
+    });
+  }
+
+  // API 호출 후 초기화
+  async function loadInspectionData() {
+    const response = await fetch('/api/inspections');
+    inspectionData = await response.json();
+
+    updateCardNumbers();
+    renderTable(currentFilter);
+    highlightSelectedCard(currentFilter);
+  }
+
+  // 초기 실행
   loadInspectionData();
+  setupCardClicks();
+
 </script>
 </body>
 </html>
