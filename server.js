@@ -1,23 +1,15 @@
 require('dotenv').config();
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
-
 const express = require('express');
 const path = require('path');
-const { Client } = require('pg');
+const { createClient } = require('@supabase/supabase-js');
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 10000;
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
-client.connect()
-  .then(() => console.log('✅ PostgreSQL connected'))
-  .catch(err => console.error('❌ PostgreSQL connection error:', err));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
@@ -28,22 +20,19 @@ app.get('/', (req, res) => {
 
 app.get('/api/inspections', async (req, res) => {
   try {
-    const result = await client.query(`
-      SELECT 
-        "사이트명" AS site, 
-        "점검일" AS date, 
-        "상태" AS status, 
-        "비고" AS remark 
-      FROM inspections 
-      ORDER BY "점검일" DESC 
-      LIMIT 10
-    `);
+    const { data, error } = await supabase
+      .from('inspections')
+      .select('사이트명, 점검일, 상태, 비고')
+      .order('점검일', { ascending: false })
+      .limit(10);
 
-    const mappedRows = result.rows.map(row => ({
-      site: row.site,
-      date: new Date(row.date).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' }),
-      status: row.status,
-      remark: row.remark,
+    if (error) throw error;
+
+    const mappedRows = data.map(row => ({
+      site: row['사이트명'],
+      date: new Date(row['점검일']).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' }),
+      status: row['상태'],
+      remark: row['비고'],
     }));
 
     res.json(mappedRows);

@@ -111,22 +111,22 @@
 
         <!-- 카드 영역 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fbfdff, #f0faff);">
+          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fbfdff, #f0faff);">
             <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">총 사이트 수</p>
-            <p class="text-4xl font-extrabold text-sky-700">32</p>
-        </div>
-        <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fcfffd, #f0fffa);">
+            <p id="totalSites" class="text-4xl font-extrabold text-sky-700">--</p>
+          </div>
+          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fcfffd, #f0fffa);">
             <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">점검 완료</p>
-            <p class="text-4xl font-extrabold text-emerald-600">28</p>
-        </div>
-        <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffefc, #fff9ef);">
+            <p id="completedChecks" class="text-4xl font-extrabold text-emerald-600">--</p>
+          </div>
+          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffefc, #fff9ef);">
             <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">진행 중</p>
-            <p class="text-4xl font-extrabold text-orange-400">4</p>
-        </div>
-        <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffbfb, #fff4f4);">
+            <p id="ongoingChecks" class="text-4xl font-extrabold text-orange-400">--</p>
+          </div>
+          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffbfb, #fff4f4);">
             <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">이슈 건수</p>
-            <p class="text-4xl font-extrabold text-rose-600">7</p>
-        </div>
+            <p id="issueCount" class="text-4xl font-extrabold text-rose-600">--</p>
+          </div>
         </div>
 
         <!-- 테이블 섹션 -->
@@ -186,12 +186,56 @@
   </div>
 
   <script>
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
 
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('-translate-x-full');
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+  });
+
+  // 점검 내역 API 호출 및 테이블 그리기 + 카드 숫자 업데이트
+  async function loadInspectionData() {
+    const response = await fetch('/api/inspections');
+    const data = await response.json();
+
+    const tbody = document.querySelector('table tbody');
+    tbody.innerHTML = '';
+
+    data.forEach(item => {
+      const tr = document.createElement('tr');
+      const statusClass = item.status === '완료' ? 'emerald' : 
+                          item.status === '진행 중' ? 'orange' :
+                          item.status === '오류' ? 'rose' : 'gray';
+      const bgHoverClass = item.status === '완료' ? 'sky' : 
+                           item.status === '진행 중' ? 'orange' :
+                           item.status === '오류' ? 'rose' : 'gray';
+
+      tr.className = `border-b border-gray-200 cursor-pointer hover:bg-${bgHoverClass}-50 transition-colors`;
+
+      tr.innerHTML = `
+        <td class="py-3 px-6 font-medium">${item.site}</td>
+        <td class="py-3 px-6">${item.date}</td>
+        <td class="py-3 px-6 font-semibold text-${statusClass}-600">${item.status}</td>
+        <td class="py-3 px-6">${item.remark}</td>
+      `;
+
+      tbody.appendChild(tr);
     });
-  </script>
+
+    // 카드 숫자 계산
+    const totalSites = new Set(data.map(item => item.site)).size;
+    const completedChecks = data.filter(item => item.status === '완료').length;
+    const ongoingChecks = data.filter(item => item.status === '진행 중').length;
+    const issueCount = data.filter(item => item.status === '오류').length;
+
+    // 카드에 숫자 넣기
+    document.getElementById('totalSites').textContent = totalSites;
+    document.getElementById('completedChecks').textContent = completedChecks;
+    document.getElementById('ongoingChecks').textContent = ongoingChecks;
+    document.getElementById('issueCount').textContent = issueCount;
+  }
+
+  loadInspectionData();
+</script>
 </body>
 </html>
