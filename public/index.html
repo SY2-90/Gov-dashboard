@@ -28,12 +28,15 @@
 
   <!-- 모바일용 사이드바 토글 버튼 -->
   <button
-    id="sidebarToggle"
-    class="md:hidden fixed top-4 left-4 z-20 p-3 bg-sky-600 text-white rounded-lg shadow-lg hover:bg-sky-700 transition"
-    aria-label="메뉴 열기/닫기"
-  >
-    ☰
-  </button>
+  id="sidebarToggle"
+  class="md:hidden fixed top-4 left-4 z-30 p-3 bg-indigo-300 hover:bg-indigo-400 text-white rounded-lg shadow-lg hover:bg-indigo-600 transition"
+  aria-label="메뉴 열기/닫기"
+>
+  <!-- 햄버거 아이콘 (3줄) -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+</button>
 
   <div class="flex min-h-screen">
 
@@ -93,13 +96,19 @@
     <main class="flex-1 flex flex-col bg-gray-50 md:ml-64">
 
       <!-- 헤더 -->
-      <header class="bg-white shadow-sm px-8 py-5 flex items-center justify-between sticky top-0 z-10">
-        <h1 class="text-3xl font-extrabold text-gray-700 select-none">대시보드</h1>
-        <div class="flex items-center space-x-6">
-          <span class="text-gray-600 font-medium select-text">홍길동 관리자</span>
+      <header class="bg-white shadow-sm pl-20 md:pl-8 pr-8 py-5 flex items-center justify-between sticky top-0 z-20 w-full">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-700 select-none">
+          대시보드
+        </h1>
+        
+        <!-- 사용자 정보 및 로그아웃 버튼 -->
+        <div class="flex items-center space-x-4 sm:space-x-6">
+          <span class="text-sm sm:text-base text-gray-600 font-medium select-text whitespace-nowrap">
+            홍길동 관리자
+          </span>
           <button
             type="button"
-            class="bg-gray-400 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-300"
+            class="bg-gray-400 text-white text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-300"
           >
             로그아웃
           </button>
@@ -110,24 +119,63 @@
       <section class="p-8 space-y-8 overflow-auto">
 
         <!-- 카드 영역 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fbfdff, #f0faff);">
-            <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">총 사이트 수</p>
-            <p id="totalSites" class="text-4xl font-extrabold text-sky-700">--</p>
-          </div>
-          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fcfffd, #f0fffa);">
-            <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">점검 완료</p>
-            <p id="completedChecks" class="text-4xl font-extrabold text-emerald-600">--</p>
-          </div>
-          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffefc, #fff9ef);">
-            <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">진행 중</p>
-            <p id="ongoingChecks" class="text-4xl font-extrabold text-orange-400">--</p>
-          </div>
-          <div class="card px-8 py-4" style="background: linear-gradient(135deg, #fffbfb, #fff4f4);">
-            <p class="text-sm text-gray-400 font-medium uppercase tracking-wide mb-2">이슈 건수</p>
-            <p id="issueCount" class="text-4xl font-extrabold text-rose-600">--</p>
-          </div>
+        <div class="grid grid-cols-2 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+        <div class="relative rounded-xl shadow-lg p-6 flex flex-col justify-center
+                    hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
+                    bg-indigo-50 hover:bg-indigo-100 max-w-[280px] min-h-[140px]">
+          <p class="text-sm text-gray-500 uppercase mb-1 tracking-wide font-semibold text-left">총 사이트 수</p>
+          <p id="totalSites" class="text-4xl font-extrabold text-indigo-600 text-left z-10">--</p>
+
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="absolute bottom-3 right-3 w-10 h-10 text-indigo-600 opacity-30 pointer-events-none select-none" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m4 6v-10m4 10v-4" />
+          </svg>
         </div>
+
+        <div class="relative rounded-xl shadow-lg p-6 flex flex-col justify-center
+                    hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
+                    bg-green-50 hover:bg-green-100 max-w-[280px] min-h-[140px]">
+          <p class="text-sm text-gray-500 uppercase mb-1 tracking-wide font-semibold text-left">점검 완료</p>
+          <p id="completedChecks" class="text-4xl font-extrabold text-green-600 text-left z-10">--</p>
+
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="absolute bottom-3 right-3 w-10 h-10 text-green-600 opacity-30 pointer-events-none select-none" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="relative rounded-xl shadow-lg p-6 flex flex-col justify-center
+                    hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
+                    bg-orange-50 hover:bg-orange-100 max-w-[280px] min-h-[140px]">
+          <p class="text-sm text-gray-500 uppercase mb-1 tracking-wide font-semibold text-left">진행 중</p>
+          <p id="ongoingChecks" class="text-4xl font-extrabold text-orange-500 text-left z-10">--</p>
+
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="absolute bottom-3 right-3 w-10 h-10 text-orange-500 opacity-30 pointer-events-none select-none" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
+            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="relative rounded-xl shadow-lg p-6 flex flex-col justify-center
+                    hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
+                    bg-red-50 hover:bg-red-100 max-w-[280px] min-h-[140px]">
+          <p class="text-sm text-gray-500 uppercase mb-1 tracking-wide font-semibold text-left">이슈 건수</p>
+          <p id="issueCount" class="text-4xl font-extrabold text-red-600 text-left z-10">--</p>
+
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="absolute bottom-3 right-3 w-10 h-10 text-red-600 opacity-30 pointer-events-none select-none" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+          </svg>
+        </div>
+      </div>
 
         <!-- 테이블 섹션 -->
         <div class="card">
@@ -176,7 +224,7 @@
         <div class="card flex flex-col justify-center items-start space-y-2 border border-rose-200 rounded-xl p-6"
             style="background-color: rgba(255, 223, 223, 0.3);">
             <h3 class="text-lg font-semibold text-rose-600">이슈 현황</h3>
-            <p class="text-gray-600">이슈 7건 처리 중</p>
+            <p id="issueStatusText" class="text-gray-600">이슈 7건 처리 중</p>
         </div>
         </div>
 
@@ -233,7 +281,10 @@
     document.getElementById('completedChecks').textContent = completedChecks;
     document.getElementById('ongoingChecks').textContent = ongoingChecks;
     document.getElementById('issueCount').textContent = issueCount;
+
+    document.getElementById('issueStatusText').textContent = `이슈 ${issueCount}건 처리 중`;
   }
+
 
   loadInspectionData();
 </script>
