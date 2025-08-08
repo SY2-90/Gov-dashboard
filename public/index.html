@@ -29,7 +29,7 @@
   <!-- 모바일용 사이드바 토글 버튼 -->
   <button
   id="sidebarToggle"
-  class="md:hidden fixed top-4 left-4 z-30 p-3 bg-indigo-300 hover:bg-indigo-400 text-white rounded-lg shadow-lg hover:bg-indigo-600 transition"
+  class="md:hidden fixed top-4 left-4 z-30 p-3 bg-indigo-300 hover:bg-indigo-500 text-white rounded-lg shadow-lg transition"
   aria-label="메뉴 열기/닫기"
 >
   <!-- 햄버거 아이콘 (3줄) -->
@@ -97,18 +97,20 @@
 
       <!-- 헤더 -->
       <header class="bg-white shadow-sm pl-20 md:pl-8 pr-8 py-5 flex items-center justify-between sticky top-0 z-20 w-full">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-700 select-none">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-700 select-none whitespace-nowrap">
           대시보드
         </h1>
-        
+
         <!-- 사용자 정보 및 로그아웃 버튼 -->
         <div class="flex items-center space-x-4 sm:space-x-6">
-          <span class="text-sm sm:text-base text-gray-600 font-medium select-text whitespace-nowrap">
-            홍길동 관리자
-          </span>
+          <div class="flex flex-col text-right">
+            <span class="text-sm sm:text-base text-gray-600 font-medium select-text leading-tight">
+              홍길동<br class="sm:hidden" />관리자
+            </span>
+          </div>
           <button
             type="button"
-            class="bg-gray-400 text-white text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-300"
+            class="bg-gray-400 text-white text-sm sm:text-base px-2 sm:px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-300"
           >
             로그아웃
           </button>
@@ -122,7 +124,7 @@
         <div class="grid grid-cols-2 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-indigo-50 hover:bg-indigo-100 max-w-[280px] min-h-[140px]">
+                    bg-indigo-50 hover:bg-indigo-100 max-w-full sm:max-w-[280px] min-h-[140px]">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">총 사이트 수</p>
           <p id="totalSites" class="text-4xl font-extrabold text-indigo-600 text-left z-10">--</p>
 
@@ -136,7 +138,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-green-50 hover:bg-green-100 max-w-[280px] min-h-[140px]">
+                    bg-green-50 hover:bg-green-100 max-w-full sm:max-w-[280px] min-h-[140px]">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">점검 완료</p>
           <p id="completedChecks" class="text-4xl font-extrabold text-green-600 text-left z-10">--</p>
 
@@ -150,7 +152,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-orange-50 hover:bg-orange-100 max-w-[280px] min-h-[140px]">
+                    bg-orange-50 hover:bg-orange-100 max-w-full sm:max-w-[280px] min-h-[140px]">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">진행 중</p>
           <p id="ongoingChecks" class="text-4xl font-extrabold text-orange-500 text-left z-10">--</p>
 
@@ -164,7 +166,7 @@
 
         <div class="group relative rounded-xl shadow-lg p-6 flex flex-col justify-center
                     hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition duration-300
-                    bg-red-50 hover:bg-red-100 max-w-[280px] min-h-[140px]">
+                    bg-red-50 hover:bg-red-100 max-w-full sm:max-w-[280px] min-h-[140px]">
           <p class="text-sm text-gray-500 group-hover:text-gray-600 uppercase mb-1 tracking-wide font-semibold text-left">이슈 건수</p>
           <p id="issueCount" class="text-4xl font-extrabold text-red-600 text-left z-10">--</p>
 
